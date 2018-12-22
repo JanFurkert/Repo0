@@ -20,21 +20,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.NestedServletException;
 
 import de.jfit.regiokonzept.tools.config.ToolsConfiguration;
-import de.jfit.regiokonzept.tools.controllers.impl.StartControllerImpl;
+import de.jfit.regiokonzept.tools.process.StartProcess;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(StartControllerImpl.class)
 @ActiveProfiles("test")
 public class StartControllerTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
+    private StartProcess startProcess;
+
+    @MockBean
     private ToolsConfiguration toolsconfiguration;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void greet() throws Exception {
@@ -53,7 +56,7 @@ public class StartControllerTest {
     @Test
     public void start() throws Exception {
 
-        when(toolsconfiguration.getWelcomeMessage()).thenReturn("Regiokonzept - Tools");
+        when(startProcess.retrieveMessage()).thenReturn("Regiokonzept - Tools");
 
         mockMvc.perform(get("/regiokonzept/tools")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Regiokonzept - Tools")));

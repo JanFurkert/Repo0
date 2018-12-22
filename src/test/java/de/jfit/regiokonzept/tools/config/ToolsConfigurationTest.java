@@ -20,10 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import de.jfit.regiokonzept.tools.ToolsApplication;
-
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ToolsApplication.class)
+@SpringBootTest
 @ActiveProfiles("test")
 public class ToolsConfigurationTest {
 
