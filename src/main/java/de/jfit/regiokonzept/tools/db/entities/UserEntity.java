@@ -3,9 +3,13 @@
  */
 package de.jfit.regiokonzept.tools.db.entities;
 
-public interface UserEntity {
+public interface UserEntity extends MappedSuperEntity {
 
     String FIND_ALL = "USER.FIND_ALL";
+
+    String FIND_BY_EMAIL = "USER.FIND_BY_EMAIL";
+
+    String FIND_BY_NAME = "USER.FIND_BY_NAME";
 
     /**
      * @return the eMail
@@ -18,9 +22,9 @@ public interface UserEntity {
     String getForename();
 
     /**
-     * @return the id
+     * @return the name
      */
-    Long getId();
+    String getName();
 
     /**
      * @return the password
@@ -31,16 +35,6 @@ public interface UserEntity {
      * @return the surename
      */
     String getSurename();
-
-    /**
-     * @return the username
-     */
-    String getUsername();
-
-    /**
-     * @return the version
-     */
-    Integer getVersion();
 
     /**
      * @param eMail
@@ -55,6 +49,12 @@ public interface UserEntity {
     void setForename(String forename);
 
     /**
+     * @param name
+     *            the name to set
+     */
+    void setName(String name);
+
+    /**
      * @param password
      *            the password to set
      */
@@ -65,11 +65,5 @@ public interface UserEntity {
      *            the surename to set
      */
     void setSurename(String surename);
-
-    /**
-     * @param username
-     *            the username to set
-     */
-    void setUsername(String username);
 
 }

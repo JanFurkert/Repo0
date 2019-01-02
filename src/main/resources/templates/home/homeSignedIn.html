@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Biotoptyperfassung</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" th:href="@{/css/core.css}" href="css/core.css" />
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+</head>
+
+<body>
+    <!-- div th:replace="fragments/header :: header">&nbsp;</div -->
+    <div th:replace="~{fragments/header :: header}">Header</div>
+    <div class="container">
+        <!-- /* Handle the flash message */-->
+        <th:block th:if="${message != null}">
+            <!-- /* The message code is returned from the @Controller */ -->
+            <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
+        </th:block>
+        <h2>
+            <span th:text="#{homeSignedIn.title}"></span>
+        </h2>
+        
+        <form th:action="@{/addbiotoptyp}" th:object="${biotopTypForm}" method="POST">
+            <span th:text="#{homeSignedIn.label.project.name}"></span>
+            <input type="text" th:field="*{projectName}" />    
+            <br/>
+            <span th:text="#{homeSignedIn.label.project.biotoptyp.number}"></span>
+            <input type="text" th:field="*{number}" />    
+            <br/>
+            <span th:text="#{homeSignedIn.label.project.biotoptyp.code}"></span>
+            <input type="text" th:field="*{code}" />    
+            <br/>
+            <input type="submit" value="Create" />
+        </form>
+        
+        <br/>
+        <div th:insert="~{fragments/footer :: footer}">&copy; 2017 The Static Templates</div>
+    </div>
+</body>
+</html>

@@ -4,12 +4,16 @@
 package de.jfit.regiokonzept.tools.db.dao.impl;
 
 import static de.jfit.regiokonzept.tools.db.entities.UserEntity.FIND_ALL;
+import static de.jfit.regiokonzept.tools.db.entities.UserEntity.FIND_BY_EMAIL;
+import static de.jfit.regiokonzept.tools.db.entities.UserEntity.FIND_BY_NAME;
 
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +27,7 @@ import de.jfit.regiokonzept.tools.db.entities.impl.UserEntityImpl;
  * @author minion69
  */
 @Repository
-@Transactional
+@Transactional(value = TxType.REQUIRED)
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
@@ -44,10 +48,10 @@ public class UserDaoImpl implements UserDao {
     /*
      * (non-Javadoc)
      * 
-     * @see de.jfit.regiokonzept.tools.db.dao.impl.UserDao#find(de.jfit.regiokonzept.tools.db.entities.impl.UserEntityImpl)
+     * @see de.jfit.regiokonzept.tools.db.dao.UserDao#find(de.jfit.regiokonzept.tools.db.entities.UserEntity)
      */
     @Override
-    public UserEntityImpl find(final UserEntity userEntity) {
+    public UserEntityImpl find(UserEntity userEntity) {
         return entityManager.find(UserEntityImpl.class, userEntity.getId());
     }
 
@@ -59,6 +63,32 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<UserEntityImpl> findAll() {
         return entityManager.createNamedQuery(FIND_ALL, UserEntityImpl.class).getResultList();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.jfit.regiokonzept.tools.db.dao.UserDao#findByEmail(de.jfit.regiokonzept.tools.db.entities.UserEntity)
+     */
+    @Override
+    public UserEntityImpl findByEmail(UserEntity userEntity) {
+        Query queryUserEntity = entityManager.createNamedQuery(FIND_BY_EMAIL, UserEntityImpl.class);
+        queryUserEntity.setParameter("email", userEntity.getEmail());
+
+        return (UserEntityImpl) queryUserEntity.getSingleResult();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.jfit.regiokonzept.tools.db.dao.UserDao#findByName(de.jfit.regiokonzept.tools.db.entities.UserEntity)
+     */
+    @Override
+    public UserEntityImpl findByName(UserEntity userEntity) {
+        Query queryUserEntity = entityManager.createNamedQuery(FIND_BY_NAME, UserEntityImpl.class);
+        queryUserEntity.setParameter("name", userEntity.getName());
+
+        return (UserEntityImpl) queryUserEntity.getSingleResult();
     }
 
     /*
@@ -80,4 +110,5 @@ public class UserDaoImpl implements UserDao {
     public UserEntityImpl update(final UserEntityImpl userEntity) {
         return entityManager.merge(userEntity);
     }
+
 }

@@ -37,15 +37,22 @@ public class StartControllerTest {
 
     @Test
     public void greet() throws Exception {
-        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/regiokonzept/greet")).andDo(print())
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/greet")).andDo(print())
                 .andExpect(status().isOk()).andExpect(content().string(containsString("Hello World!"))));
+    }
+
+    @Test
+    public void homeNotSignedIn() throws Exception {
+
+        mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Get started quickly by signing up")));
     }
 
     @Test
     public void start() throws Exception {
         when(startProcess.retrieveMessage()).thenReturn("Regiokonzept - Tools");
 
-        mockMvc.perform(get("/regiokonzept/tools")).andDo(print()).andExpect(status().isOk())
+        mockMvc.perform(get("/start")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Regiokonzept - Tools")));
     }
 }

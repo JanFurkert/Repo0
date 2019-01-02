@@ -35,17 +35,20 @@ import de.jfit.regiokonzept.tools.db.entities.impl.UserEntityImpl;
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 public class UserDaoTest {
 
+    private static final String EMAIL = "jan.furkert@gmail.com";
+    private static final String NAME = "Minion69";
+
     @Autowired
     private UserDao userDao;
 
     @Test
     public void create() {
         UserEntityImpl userEntity = new UserEntityImpl();
-        userEntity.setEmail("jan.furkert@gmail.com");
+        userEntity.setEmail(EMAIL);
         userEntity.setForename("Jan");
         userEntity.setPassword("pwd");
         userEntity.setSurename("Furkert");
-        userEntity.setUsername("Minion69");
+        userEntity.setName(NAME);
 
         // creates new table user if not existing and inserts user-values
         userEntity = userDao.create(userEntity);
@@ -61,7 +64,7 @@ public class UserDaoTest {
         userEntity.setForename("forename");
         userEntity.setPassword("password");
         userEntity.setSurename("surename");
-        userEntity.setUsername("username");
+        userEntity.setName("username");
 
         userEntity = userDao.create(userEntity);
         Long userEntityId = userEntity.getId();
@@ -82,6 +85,24 @@ public class UserDaoTest {
     }
 
     @Test
+    public void findByEmail() {
+        final UserEntity userEntity = new UserEntityImpl();
+        userEntity.setEmail(EMAIL);
+        final UserEntity userEntityRead = userDao.findByEmail(userEntity);
+
+        assertNotNull(userEntityRead);
+    }
+
+    @Test
+    public void findByName() {
+        final UserEntity userEntity = new UserEntityImpl();
+        userEntity.setName(NAME);
+        final UserEntity userEntityRead = userDao.findByName(userEntity);
+
+        assertNotNull(userEntityRead);
+    }
+
+    @Test
     public void read() {
         final UserEntity userEntityRead = userDao.find(new UserEntityImpl(1l));
 
@@ -90,15 +111,16 @@ public class UserDaoTest {
 
     @Test
     public void update() {
-        final String username = "Balduin";
+        final String forename = "Balduin";
         UserEntityImpl userEntityRead = userDao.find(new UserEntityImpl(1l));
         final Integer version = userEntityRead.getVersion();
-        assertNotEquals(username, userEntityRead.getUsername());
+        assertNotEquals(forename, userEntityRead.getForename());
 
-        userEntityRead.setUsername(username);
+        userEntityRead.setForename(forename);
         userEntityRead = userDao.update(userEntityRead);
 
         assertTrue(userEntityRead.getVersion() == version + 1);
-        assertEquals(username, userEntityRead.getUsername());
+        assertEquals(forename, userEntityRead.getForename());
     }
+
 }

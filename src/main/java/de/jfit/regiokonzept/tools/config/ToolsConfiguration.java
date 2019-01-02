@@ -27,10 +27,8 @@ public class ToolsConfiguration {
 
     private BuildProperties buildProperties;
 
-    // @Value("${environment}")
     private String environment;
 
-    // @Value("${welcome.message}")
     private String welcomeMessage;
 
     @Autowired

@@ -9,5 +9,6 @@ package de.jfit.regiokonzept.tools.process;
 
 public interface StartProcess {
 
+    @Deprecated
     String retrieveMessage();
 }

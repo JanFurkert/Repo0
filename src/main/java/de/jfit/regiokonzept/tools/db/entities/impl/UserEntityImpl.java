@@ -4,16 +4,17 @@
 package de.jfit.regiokonzept.tools.db.entities.impl;
 
 import static de.jfit.regiokonzept.tools.db.entities.UserEntity.FIND_ALL;
+import static de.jfit.regiokonzept.tools.db.entities.UserEntity.FIND_BY_EMAIL;
+import static de.jfit.regiokonzept.tools.db.entities.UserEntity.FIND_BY_NAME;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 import de.jfit.regiokonzept.tools.db.entities.UserEntity;
 
@@ -23,27 +24,34 @@ import de.jfit.regiokonzept.tools.db.entities.UserEntity;
  * @author minion69
  */
 @Entity
-@Table(name = "user", schema = "regiokonzeptsch", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
-@NamedQuery(name = FIND_ALL, query = "SELECT userEntity FROM UserEntityImpl userEntity")
+@Table(name = "user",
+        schema = "regiokonzeptsch",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"email"}), @UniqueConstraint(columnNames = {"name"})})
+@NamedQueries({
+    @NamedQuery(name = FIND_ALL, query = "SELECT userEntity FROM UserEntityImpl userEntity"),
+    @NamedQuery(name = FIND_BY_EMAIL,
+                query = "SELECT userEntity FROM UserEntityImpl userEntity WHERE userEntity.email = :email"),
+    @NamedQuery(name = FIND_BY_NAME,
+                query = "SELECT userEntity FROM UserEntityImpl userEntity WHERE userEntity.name = :name")
+})
 public class UserEntityImpl extends MappedSuperEntityImpl implements UserEntity {
 
+    @NotEmpty(message = "UserEntity.email:NotEmpty")
+    @Length(min = 3, max = 100, message = "UserEntity.email:Length")
     private String email;
 
+    @Length(max = 25, message = "UserEntity.forename:Length")
     private String forename;
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @NotEmpty(message = "UserEntity.name:NotEmpty")
+    @Length(max = 50, message = "UserEntity.name:Length")
+    private String name;
 
+    @Length(max = 50, message = "UserEntity.password:Length")
     private String password;
 
+    @Length(max = 50, message = "UserEntity.surename:Length")
     private String surename;
-
-    private String username;
-
-    @Version
-    private Integer version;
 
     public UserEntityImpl() {
         super();
@@ -71,11 +79,11 @@ public class UserEntityImpl extends MappedSuperEntityImpl implements UserEntity 
     }
 
     /**
-     * @return the id
+     * @return the username
      */
     @Override
-    public Long getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
     /**
@@ -92,22 +100,6 @@ public class UserEntityImpl extends MappedSuperEntityImpl implements UserEntity 
     @Override
     public String getSurename() {
         return surename;
-    }
-
-    /**
-     * @return the username
-     */
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @return the version
-     */
-    @Override
-    public Integer getVersion() {
-        return version;
     }
 
     /**
@@ -129,6 +121,15 @@ public class UserEntityImpl extends MappedSuperEntityImpl implements UserEntity 
     }
 
     /**
+     * @param username
+     *            the username to set
+     */
+    @Override
+    public void setName(String username) {
+        this.name = username;
+    }
+
+    /**
      * @param password
      *            the password to set
      */
@@ -146,12 +147,4 @@ public class UserEntityImpl extends MappedSuperEntityImpl implements UserEntity 
         this.surename = surename;
     }
 
-    /**
-     * @param username
-     *            the username to set
-     */
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }

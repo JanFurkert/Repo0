@@ -28,4 +28,5 @@ public class StartProcessImpl implements StartProcess {
     public String retrieveMessage() {
         return toolsConfiguration.getWelcomeMessage();
     }
+
 }
